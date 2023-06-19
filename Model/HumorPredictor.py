@@ -1,6 +1,7 @@
 from transformers import TextClassificationPipeline
 import pandas as pd
 import os
+from Utils.utils import print_str
 
 
 class HumorPredictor:
@@ -15,8 +16,10 @@ class HumorPredictor:
         return TextClassificationPipeline(model=self.model.to('cpu'), tokenizer=self.tokenizer)
 
     def predict(self, predict_on_dataset):
+        print_str('STARTED PREDICT ON {0}'.format(predict_on_dataset))
         self.preds[predict_on_dataset] = self.classifier(self.datasets[predict_on_dataset]['test']['sentence'],
                                                          batch_size=1)
+        print_str('FINISHED PREDICT ON {0}'.format(predict_on_dataset))
         return self.preds[predict_on_dataset]
 
     def write_predictions(self, path):
