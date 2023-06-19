@@ -52,11 +52,18 @@ class HumorTrainer:
 
     def get_run_name(self):
         time = datetime.now()
-        return '{0}_{1}_{2}:{3}'.format(self._model_params['model'],
-                                        time.date(), time.hour, time.minute)
+        return '{0}_{1}_{2}:{3}_seed_{4}'.format(self._model_params['model'],
+                                                 time.date(), time.hour, time.minute, self._model_params['seed'])
 
     def get_tokenizer(self):
         return self._tokenizer
+
+    def get_datasets(self):
+        return self._datasets
+
+    def process_datasets(self):
+        for dataset in self._init_datasets:
+            self._datasets[dataset] = self._init_datasets[dataset].map(self.preprocess_function, batched=True)
 
     def init_model(self):
         set_seed(self._model_params['seed'])
@@ -66,9 +73,9 @@ class HumorTrainer:
         self._tokenizer = AutoTokenizer.from_pretrained(self._model_params['model_dir'])
         self._model = AutoModelForSequenceClassification.from_pretrained(self._model_params['model_dir'],
                                                                          config=self._config)
-
-        self._datasets[self._train_on] = \
-            self._init_datasets[self._train_on].map(self.preprocess_function, batched=True)
+        self.process_datasets()
+        # self._datasets[self._train_on] = \
+        #     self._init_datasets[self._train_on].map(self.preprocess_function, batched=True)
 
     def train(self):
         self.init_model()
