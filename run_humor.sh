@@ -8,5 +8,5 @@
 #SBATCH --mail-user=mor.turgeman2@mail.huji.ac.il
 #SBATCH --gres=gpu:1,vmem:10g
 
-python3 main.py 1 -1 -1
+python3 main.py -1 -1
 
