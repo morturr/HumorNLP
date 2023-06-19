@@ -35,7 +35,7 @@ if __name__ == '__main__':
     trained_model = h_trainer.train()
 
     # predict labels
-    h_predictor = HumorPredictor(trained_model, datasets, h_trainer.get_tokenizer())
+    h_predictor = HumorPredictor(trained_model, h_trainer.get_datasets(), h_trainer.get_tokenizer())
     for name in dataset_names:
         h_predictor.predict(name)
 
