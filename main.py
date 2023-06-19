@@ -1,10 +1,10 @@
 import os
 import wandb
 import logging
-import argparse
 from Data.DataPreprocessing import DataPreprocessing
 from Model.HumorPredictor import HumorPredictor
 from Model.HumorTrainer import HumorTrainer
+from Utils.utils import print_str, my_parse_args
 from datetime import datetime
 
 
@@ -13,15 +13,9 @@ wandb.login(key='94ee7285d2d25226f2c969e28645475f9adffbce')
 logger = logging.getLogger(__name__)
 
 
-def my_parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('n_train_samples', type=int)
-    parser.add_argument('n_test_samples', type=int)
-    return parser.parse_args()
-
-
 if __name__ == '__main__':
     # load datasets
+    print_str('STARTED RUN')
     dpp = DataPreprocessing()
     dataset_names = ['amazon', 'headlines']
     data_path = 'Data/humor_datasets/'
@@ -35,7 +29,7 @@ if __name__ == '__main__':
         'model': 'roberta',
         'model_dir': 'roberta-base',
         'train_on_dataset': 'amazon',
-        'seed': 18,
+        'seed': 0,
     }
     h_trainer = HumorTrainer(model_params, my_parse_args(), datasets)
     trained_model = h_trainer.train()
@@ -50,3 +44,5 @@ if __name__ == '__main__':
 
     # save model
     h_trainer.save_model(f'Data/output/models/{date_str}')
+
+    print_str('FINISHED RUN')

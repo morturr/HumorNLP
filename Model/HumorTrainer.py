@@ -1,9 +1,8 @@
 import numpy as np
-import pandas as pd
-import argparse
 import os
 from datetime import datetime
 import wandb
+from Utils.utils import print_str
 from transformers import TrainingArguments, \
     AutoModelForSequenceClassification, set_seed, EvalPrediction, Trainer, \
     AutoTokenizer, AutoConfig
@@ -82,7 +81,9 @@ class HumorTrainer:
             tokenizer=self._tokenizer
         )
 
+        print_str('STARTED TRAIN ON {0}'.format(self._model_params['model']))
         self._trainer.train()
+        print_str('FINISHED TRAIN ON {0}'.format(self._model_params['model']))
 
         return self._model
 
@@ -90,16 +91,3 @@ class HumorTrainer:
         if not os.path.exists(path):
             os.mkdir(path)
         self._trainer.save_model(os.path + self._model_params['model'])
-
-
-def main():
-    model_params = {
-        'model': 'roberta',
-        'model_dir': 'roberta-base',
-        'train_on_dataset': 'amazon',
-        'seed': 0,
-    }
-
-    # humor_trainer = HumorTrainer(model_params, my_parse_args())
-    # trained_model = humor_trainer.train()
-    # humor_trainer.save_model('')
